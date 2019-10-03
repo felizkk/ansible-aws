@@ -21,7 +21,7 @@
 
   - name: delete instance
     ec2:
-      instance_ids: found_instance.instances[0].instance_id
+      instance_ids: [ "{{ found_instance.instances[0].instance_id }}" ]
       region: "{{ target_aws_region }}"
       state: absent
 ...
