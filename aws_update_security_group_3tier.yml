@@ -1,0 +1,53 @@
+---
+- name: Update Security Access for AWS Instances
+  hosts: "{{ tower_hostgroup_name }}"
+  # Example: tag_demo_type_3tier_linux
+  gather_facts: no
+
+  tasks:
+  - name: Allow SSH and HTTP on rhproxy and webserver
+    ec2_group:
+      aws_access_key: "{{ my_aws_access_key }}"
+      aws_secret_key: "{{ my_aws_secret_key }}"    
+      name: "{{ ec2_security_group_names }}"
+      description: Enable SSH and HTTP Acess for RHEL Webserver
+      region: "{{ ec2_region }}"
+      state: present
+      rules:
+      - proto: tcp
+        from_port: 80
+        to_port: 80
+        cidr_ip: 0.0.0.0/0
+      - proto: tcp
+        from_port: 22
+        to_port: 22
+        cidr_ip: "{{ ansible_public_ip }}/32"
+      rules_egress:
+      - proto: -1
+        cidr_ip: "0.0.0.0/0"
+    when: ( 'webserver' in name or 'haproxy' in ec2_tag_3tier_type )
+    delegate_to: localhost
+
+  - name: Allow SSH and SQL on rhproxy and dbserver
+    ec2_group:
+      aws_access_key: "{{ my_aws_access_key }}"
+      aws_secret_key: "{{ my_aws_secret_key }}"    
+      name: "{{ ec2_security_group_names }}"
+      description: Enable SSH and HTTP Acess for RHEL Webserver
+      region: "{{ ec2_region }}"
+      state: present
+      rules:
+      - proto: tcp
+        from_port: 3306
+        to_port: 3306
+        cidr_ip: 172.31.0.0/16
+      - proto: tcp
+        from_port: 22
+        to_port: 22
+        cidr_ip: "{{ ansible_public_ip }}/32"
+      rules_egress:
+      - proto: -1
+        cidr_ip: "0.0.0.0/0"  
+    when: ( 'dbserver' in ec2_tag_3tier_type )
+    delegate_to: localhost
+...
