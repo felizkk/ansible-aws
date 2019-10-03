@@ -1,0 +1,33 @@
+---
+- name: AWS - Create Windows Server AMI
+  hosts: localhost
+  gather_facts: no
+
+  vars:
+    # Sydney is ap-southeast-2
+    - target_aws_region: "ap-southeast-2"
+    - target_ami_name: "Windows_Server-1903-English-Core-Base-*"
+    - target_owners: "amazon"
+
+  tasks:
+  - name: find current Windows AMI in this region
+    ec2_ami_facts:
+      aws_access_key: "{{ my_aws_access_key }}"
+      aws_secret_key: "{{ my_aws_secret_key }}"
+      region: "{{ target_aws_region }}"
+      owners: "{{ target_owners }}"
+      filters:
+        name: "{{ target_ami_name }}"
+    register: found_amis
+
+  # Show All AMIs found
+  - debug:
+      var: found_amis
+
+  # We will use the latest found ami id, sorted by creation date
+  - name:  set new instance ami id
+    vars:
+      new_instance_ami: "{{ found_amis.images | selectattr('name', 'defined') | sort(attribute='creation_date') | last }}"
+    debug:
+      msg: "{{new_instance_ami.image_id}}"
+...

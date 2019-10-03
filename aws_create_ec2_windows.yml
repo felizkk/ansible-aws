@@ -1,0 +1,99 @@
+---
+- name: AWS - Create Windows Server AMI
+  hosts: localhost
+  gather_facts: no
+
+  vars:
+    - target_instance_name: "win2019-1"
+    # Sydney is ap-southeast-2
+    - target_aws_region: "ap-southeast-2"
+    - target_ami_name: "Windows_Server-1903-English-Core-Base-*"
+    #- target_ami_name: "Windows_Server-2016-English-Core-Base-*"
+    - target_owners: "amazon"
+    - target_instance_type: "t2.micro"
+    - target_key_name: "aws-ssh-key-1"
+    - target_vpc_subnet_id: "subnet-dc7130ab"
+    - target_volume_size: "30"
+    - ansible_public_ip: "180.189.212.199"
+
+  tasks:
+  - name: find current Windows AMI in this region
+    ec2_ami_facts:
+      aws_access_key: "{{ my_aws_access_key }}"
+      aws_secret_key: "{{ my_aws_secret_key }}"
+      region: "{{ target_aws_region }}"
+      owners: "{{ target_owners }}"
+      filters:
+        name: "{{ target_ami_name }}"
+    register: found_amis
+
+  # Show All AMIs found
+  #- debug:
+  #    var: found_amis
+
+  # We will use the latest found ami id, sorted by creation date
+  - name:  set new instance ami
+    vars:
+      new_instance_ami: "{{ found_amis.images | selectattr('name', 'defined') | sort(attribute='creation_date') | last }}"
+    debug:
+      msg: "{{ new_instance_ami.image_id }}"
+  
+  - name: create vpc security group if not exist
+    ec2_group:
+      aws_access_key: "{{ my_aws_access_key }}"
+      aws_secret_key: "{{ my_aws_secret_key }}"    
+      name: winrm-rdp-http
+      description: Enable WinRM, RDP, and HTTP Acess for Windows
+      region: "{{ target_aws_region }}"
+      state: present
+      rules:
+      - proto: tcp
+        from_port: 80
+        to_port: 80
+        cidr_ip: 0.0.0.0/0
+      - proto: tcp
+        from_port: 5986
+        to_port: 5986
+        cidr_ip: "{{ ansible_public_ip }}/32"
+      - proto: tcp
+        from_port: 3389
+        to_port: 3389
+        cidr_ip: "{{ ansible_public_ip }}/32"
+      rules_egress:
+      - proto: -1
+        cidr_ip: "0.0.0.0/0"
+    register: new_sg
+
+  - name: launch new AMI instance
+    vars:
+      new_instance_ami: "{{ found_amis.images | selectattr('name', 'defined') | sort(attribute='creation_date') | last }}"  
+    ec2:
+      aws_access_key: "{{ my_aws_access_key }}"
+      aws_secret_key: "{{ my_aws_secret_key }}"
+      region: "{{ target_aws_region }}"
+      image: "{{ new_instance_ami.image_id }}"
+      instance_type: "{{ target_instance_type }}"
+      group_id: "{{ new_sg.group_id }}"
+      key_name: "{{ target_key_name }}"
+      vpc_subnet_id: "{{ target_vpc_subnet_id }}"
+      state: present
+      volumes:
+        - device_name: /dev/sda1
+          volume_type: gp2
+          volume_size: "{{ target_volume_size }}"
+          delete_on_termination: true
+      instance_tags:
+        Name: "{{ target_instance_name }}"
+        ansible_group: "aws_windows"
+        demo_type: "basic_windows"
+      user_data: "{{ lookup('template', 'templates/userdata.txt.j2') }}"
+      assign_public_ip: yes 
+      wait: yes
+      wait_timeout: 500
+      count: 1
+    register: new_ec2
+
+  # Show New Instance
+  - debug:
+      var: new_ec2  
+...
