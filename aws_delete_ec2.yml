@@ -11,8 +11,8 @@
   tasks:
   - name: find instance id
     ec2_instance_facts:
+      region: "{{ target_aws_region }}"    
       filters:
-        availability-szone: "{{ target_aws_region }}"
         "tag:Name": "{{ target_instance_name }}"
     register: found_instance
   
