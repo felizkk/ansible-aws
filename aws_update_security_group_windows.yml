@@ -1,0 +1,33 @@
+---
+- name: Update Security Access (RDP, WinRM, HTTP) for AWS Windows IIS Instances
+  hosts: localhost
+  gather_facts: no
+
+  vars:
+    - ec2_region: "ap-southeast-2"
+    - ansible_public_ip: "111.111.222.222"
+
+  tasks:
+  - name: update public ip access for windows security group
+    ec2_group:  
+      name: winrm-rdp-http
+      description: Enable RDP, WinRM, and HTTP Acess for Windows IIS Server
+      region: "{{ ec2_region }}"
+      state: present
+      rules:
+      - proto: tcp
+        from_port: 80
+        to_port: 80
+        cidr_ip: 0.0.0.0/0
+      - proto: tcp
+        from_port: 5986
+        to_port: 5986
+        cidr_ip: "{{ ansible_public_ip }}/32"
+      - proto: tcp
+        from_port: 3389
+        to_port: 3389
+        cidr_ip: "{{ ansible_public_ip }}/32"
+      rules_egress:
+      - proto: -1
+        cidr_ip: "0.0.0.0/0"
+...

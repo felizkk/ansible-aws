@@ -8,7 +8,7 @@
     - ansible_public_ip: "111.111.222.222"
 
   tasks:
-  - name: update public ip access webserver security group
+  - name: update public ip access for webserver security group
     ec2_group:  
       name: ssh-http
       description: Enable SSH and HTTP Acess for RHEL Webserver
@@ -27,10 +27,10 @@
       - proto: -1
         cidr_ip: "0.0.0.0/0"
 
-  - name: update public ip access dbserver security group
+  - name: update public ip access for dbserver security group
     ec2_group:    
       name: ssh-mysql
-      description: Enable SSH and HTTP Acess for RHEL Webserver
+      description: Enable SSH and MySQL Acess for RHEL DBserver
       region: "{{ ec2_region }}"
       state: present
       rules:
