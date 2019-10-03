@@ -1,0 +1,17 @@
+---
+- name: AWS - Change Power State of Instances within a Group Tag
+  hosts: localhost
+  gather_facts: no
+
+  vars:
+    # Sydney is ap-southeast-2
+    - target_aws_region: "ap-southeast-2"
+    - target_state: "running"
+
+  tasks:
+  - ec2:
+      region: "{{ target_aws_region }}"
+      instance_tags:
+        ansible_group: "{{ target_group_tag }}"
+      state: "{{ target_state }}"
+...
