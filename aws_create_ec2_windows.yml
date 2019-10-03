@@ -14,6 +14,12 @@
     - target_key_name: "aws-ssh-key-1"
     - target_vpc_subnet_id: "subnet-dc7130ab"
     - target_volume_size: "30"
+    # Security Group Options: ssh-http, ssh-mysql, winrm-rdp-http
+    - target_security_group: "winrm-rdp-http"
+    # Tags
+    - target_tag_ansible_group: "aws_windows"
+    - target_tag_demo_type: "iis_windows"
+    # Ansible/Tower public IP address for remote access 
     - ansible_public_ip: "180.189.212.199"
 
   tasks:
@@ -36,30 +42,6 @@
     debug:
       msg: "{{ new_instance_ami.image_id }}"
   
-  - name: create vpc security group if not exist
-    ec2_group:   
-      name: winrm-rdp-http
-      description: Enable WinRM, RDP, and HTTP Acess for Windows
-      region: "{{ target_aws_region }}"
-      state: present
-      rules:
-      - proto: tcp
-        from_port: 80
-        to_port: 80
-        cidr_ip: 0.0.0.0/0
-      - proto: tcp
-        from_port: 5986
-        to_port: 5986
-        cidr_ip: "{{ ansible_public_ip }}/32"
-      - proto: tcp
-        from_port: 3389
-        to_port: 3389
-        cidr_ip: "{{ ansible_public_ip }}/32"
-      rules_egress:
-      - proto: -1
-        cidr_ip: "0.0.0.0/0"
-    register: new_sg
-
   - name: launch new AMI instance
     vars:
       new_instance_ami: "{{ found_amis.images | selectattr('name', 'defined') | sort(attribute='creation_date') | last }}"  
@@ -67,7 +49,7 @@
       region: "{{ target_aws_region }}"
       image: "{{ new_instance_ami.image_id }}"
       instance_type: "{{ target_instance_type }}"
-      group_id: "{{ new_sg.group_id }}"
+      group: "{{ target_security_group }}"
       key_name: "{{ target_key_name }}"
       vpc_subnet_id: "{{ target_vpc_subnet_id }}"
       state: present
@@ -78,8 +60,8 @@
           delete_on_termination: true
       instance_tags:
         Name: "{{ target_instance_name }}"
-        ansible_group: "aws_windows"
-        demo_type: "basic_windows"
+        ansible_group: "{{ target_tag_ansible_group }}"
+        demo_type: "{{ target_tag_demo_type }}"
       user_data: "{{ lookup('template', 'templates/userdata.txt.j2') }}"
       assign_public_ip: yes 
       wait: yes

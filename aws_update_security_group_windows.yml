@@ -11,7 +11,7 @@
   - name: update public ip access for windows security group
     ec2_group:  
       name: winrm-rdp-http
-      description: Enable RDP, WinRM, and HTTP Acess for Windows IIS Server
+      description: Enable WinRM, RDP, and HTTP Acess for Windows
       region: "{{ ec2_region }}"
       state: present
       rules:
