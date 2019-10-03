@@ -19,8 +19,6 @@
   tasks:
   - name: find current Windows AMI in this region
     ec2_ami_facts:
-      aws_access_key: "{{ my_aws_access_key }}"
-      aws_secret_key: "{{ my_aws_secret_key }}"
       region: "{{ target_aws_region }}"
       owners: "{{ target_owners }}"
       filters:
@@ -39,9 +37,7 @@
       msg: "{{ new_instance_ami.image_id }}"
   
   - name: create vpc security group if not exist
-    ec2_group:
-      aws_access_key: "{{ my_aws_access_key }}"
-      aws_secret_key: "{{ my_aws_secret_key }}"    
+    ec2_group:   
       name: winrm-rdp-http
       description: Enable WinRM, RDP, and HTTP Acess for Windows
       region: "{{ target_aws_region }}"
@@ -68,8 +64,6 @@
     vars:
       new_instance_ami: "{{ found_amis.images | selectattr('name', 'defined') | sort(attribute='creation_date') | last }}"  
     ec2:
-      aws_access_key: "{{ my_aws_access_key }}"
-      aws_secret_key: "{{ my_aws_secret_key }}"
       region: "{{ target_aws_region }}"
       image: "{{ new_instance_ami.image_id }}"
       instance_type: "{{ target_instance_type }}"

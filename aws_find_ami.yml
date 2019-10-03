@@ -12,8 +12,6 @@
   tasks:
   - name: find current Windows AMI in this region
     ec2_ami_facts:
-      aws_access_key: "{{ my_aws_access_key }}"
-      aws_secret_key: "{{ my_aws_secret_key }}"
       region: "{{ target_aws_region }}"
       owners: "{{ target_owners }}"
       filters:
