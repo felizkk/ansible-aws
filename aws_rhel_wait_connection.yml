@@ -1,0 +1,9 @@
+---
+- name: AWS - RHEL Wait for SSH Connection
+  hosts: "{{ target_instance_name }}"
+  gather_facts: no
+
+  tasks:
+  - name: wait for connection up to 600 seconds
+    wait_for_connection:
+      timeout: 600
