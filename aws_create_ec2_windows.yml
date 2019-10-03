@@ -19,8 +19,6 @@
     # Tags
     - target_tag_ansible_group: "aws_windows"
     - target_tag_demo_type: "iis_windows"
-    # Ansible/Tower public IP address for remote access 
-    - ansible_public_ip: "180.189.212.199"
 
   tasks:
   - name: find current Windows AMI in this region

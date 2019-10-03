@@ -18,8 +18,6 @@
     # Tags
     - target_tag_ansible_group: "aws_linux"
     - target_tag_demo_type: "3tier_webserver_linux"
-    # Ansible/Tower public IP address for remote access 
-    - ansible_public_ip: "180.189.212.199"
 
   tasks:
   - name: find current RHEL AMI in this region
