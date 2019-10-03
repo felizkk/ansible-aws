@@ -17,11 +17,11 @@
     register: found_instance
   
   - debug:
-      var: found_instance.instances[0].instance_id
+      msg: "{{ found_instance.instances[0].instance_id }}"
 
   - name: delete instance
     ec2:
-      instance_ids: found_instance.instance_ids
+      instance_ids: found_instance.instances[0].instance_id
       region: "{{ target_aws_region }}"
       state: absent
 ...
