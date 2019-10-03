@@ -1,13 +1,16 @@
 ---
-- name: Update Security Access for AWS Instances
-  hosts: "{{ tower_hostgroup_name }}"
-  # Example: tag_demo_type_3tier_linux
+- name: Update Security Access (SSH, MySQL, HTTP) for AWS 3Tier RHEL Instances
+  hosts: localhost
   gather_facts: no
 
+  vars:
+    - ec2_region: "ap-southeast-2"
+    - ansible_public_ip: "111.111.222.222"
+
   tasks:
-  - name: Allow SSH and HTTP on rhproxy and webserver
+  - name: update public ip access webserver security group
     ec2_group:  
-      name: "{{ ec2_security_group_names }}"
+      name: ssh-http
       description: Enable SSH and HTTP Acess for RHEL Webserver
       region: "{{ ec2_region }}"
       state: present
@@ -23,12 +26,10 @@
       rules_egress:
       - proto: -1
         cidr_ip: "0.0.0.0/0"
-    when: ( 'webserver' in ec2_tag_3tier_type or 'haproxy' in ec2_tag_3tier_type )
-    delegate_to: localhost
 
-  - name: Allow SSH and SQL on rhproxy and dbserver
+  - name: update public ip access dbserver security group
     ec2_group:    
-      name: "{{ ec2_security_group_names }}"
+      name: ssh-mysql
       description: Enable SSH and HTTP Acess for RHEL Webserver
       region: "{{ ec2_region }}"
       state: present
@@ -44,6 +45,4 @@
       rules_egress:
       - proto: -1
         cidr_ip: "0.0.0.0/0"  
-    when: ( 'dbserver' in ec2_tag_3tier_type )
-    delegate_to: localhost
 ...
