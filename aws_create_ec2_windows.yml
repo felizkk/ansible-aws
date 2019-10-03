@@ -70,4 +70,11 @@
   # Show New Instance
   - debug:
       var: new_ec2  
+
+  - name: wait until winrm is ready
+    wait_for:
+      delay: 30
+      timeout: 600
+      port: 5986
+      host: "{{ new_ec2.instances[0].dns_name }}"
 ...

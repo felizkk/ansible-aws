@@ -71,7 +71,7 @@
 
   - name: wait until ssh is ready
     wait_for:
-      delay: 10
+      delay: 30
       timeout: 600
       port: 22
       host: "{{ new_ec2.instances[0].dns_name }}"
