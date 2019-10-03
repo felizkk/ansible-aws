@@ -5,5 +5,5 @@
 
   tasks:
   - name: wait for connection up to 600 seconds
-    wait_for_connection:
+    wait_for:
       timeout: 600
