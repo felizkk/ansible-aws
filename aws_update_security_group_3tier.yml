@@ -25,7 +25,7 @@
       rules_egress:
       - proto: -1
         cidr_ip: "0.0.0.0/0"
-    when: ( 'webserver' in name or 'haproxy' in ec2_tag_3tier_type )
+    when: ( 'webserver' in ec2_tag_3tier_type or 'haproxy' in ec2_tag_3tier_type )
     delegate_to: localhost
 
   - name: Allow SSH and SQL on rhproxy and dbserver
