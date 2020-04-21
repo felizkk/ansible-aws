@@ -8,7 +8,7 @@
     # North Virginia is us-east-1
     - target_aws_region: "ap-southeast-2"
     - target_state: "running"
-    - target_group_tag: "aws_linux"
+    - target_group_tag: "syd_aws_linux"
 
   tasks:
   - name: change power state

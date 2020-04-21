@@ -17,8 +17,8 @@
     # Security Group Options: ssh-http, ssh-mysql, winrm-rdp-http
     - target_security_group: "ssh-http"    
     # Tags
-    - target_tag_ansible_group: "aws_linux"
-    - target_tag_demo_type: "3tier_webserver_linux"
+    - target_tag_ansible_group: "syd_aws_linux"
+    - target_tag_demo_type: "syd_3tier_webserver_linux"
 
   tasks:
   - name: find current RHEL AMI in this region

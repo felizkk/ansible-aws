@@ -17,8 +17,8 @@
     # Security Group Options: ssh-http, ssh-mysql, winrm-rdp-http
     - target_security_group: "winrm-rdp-http"
     # Tags
-    - target_tag_ansible_group: "aws_windows"
-    - target_tag_demo_type: "iis_windows"
+    - target_tag_ansible_group: "syd_aws_windows"
+    - target_tag_demo_type: "syd_iis_windows"
 
   tasks:
   - name: find current Windows AMI in this region
