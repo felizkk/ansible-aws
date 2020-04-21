@@ -7,9 +7,8 @@
     - target_instance_name: "win2019-1"
     # Sydney is ap-southeast-2
     - target_aws_region: "ap-southeast-2"
-    - target_ami_name: "Windows_Server-1903-English-Core-Base-*"
-    #- target_ami_name: "Windows_Server-2016-English-Core-Base-*"
-    - target_owners: "amazon"
+    - target_ami_name: "windows-server-2019-vs2019-1587402410"
+    - target_owners: "483285841698"
     - target_instance_type: "t2.micro"
     - target_key_name: "aws-ssh-key-1"
     - target_vpc_subnet_id: "subnet-dc7130ab"
