@@ -47,7 +47,6 @@
       image: "{{ new_instance_ami.image_id }}"
       instance_type: "{{ target_instance_type }}"
       group: "{{ target_security_group }}"
-      key_name: "{{ target_key_name }}"
       vpc_subnet_id: "{{ target_vpc_subnet_id }}"
       state: present
       volumes:
