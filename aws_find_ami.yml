@@ -1,17 +1,17 @@
 ---
-- name: AWS - Create Windows Server AMI
+- name: AWS - Find AMI Info
   hosts: localhost
   gather_facts: no
 
   vars:
     # Sydney is ap-southeast-2
-    - target_aws_region: "ap-southeast-2"
-    - target_ami_name: "Windows_Server-1903-English-Core-Base-*"
-    - target_owners: "amazon"
+    # North Virginia is us-east-1
+    - target_ami_name: "RHEL-7.8_HVM_GA-20200225-x86_64-1-Hourly2-GP2"
+    - target_owners: "309956199498"
 
   tasks:
-  - name: find current Windows AMI in this region
-    ec2_ami_facts:
+  - name: find current AMIs in this region
+    ec2_ami_info:
       region: "{{ target_aws_region }}"
       owners: "{{ target_owners }}"
       filters:

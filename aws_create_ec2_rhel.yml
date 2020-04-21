@@ -6,8 +6,9 @@
   vars:
     - target_instance_name: "aws-rhel-webserver-1"
     # Sydney is ap-southeast-2
+    # North Virginia is us-east-1
     - target_aws_region: "ap-southeast-2"
-    - target_ami_name: "RHEL-8.0.0_HVM-*"
+    - target_ami_name: "RHEL-7.8_HVM_GA-20200225-x86_64-1-Hourly2-GP2"
     - target_owners: "309956199498"
     - target_instance_type: "t2.micro"
     - target_key_name: "aws-ssh-key-1"
@@ -21,7 +22,7 @@
 
   tasks:
   - name: find current RHEL AMI in this region
-    ec2_ami_facts:
+    ec2_ami_info:
       region: "{{ target_aws_region }}"
       owners: "{{ target_owners }}"
       filters:
