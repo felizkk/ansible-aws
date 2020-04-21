@@ -6,6 +6,7 @@
   vars:
     # Sydney is ap-southeast-2
     # North Virginia is us-east-1
+    - target_aws_region: "us-east-1"
     - target_ami_name: "RHEL-7.8_HVM_GA-20200225-x86_64-1-Hourly2-GP2"
     - target_owners: "309956199498"
 
