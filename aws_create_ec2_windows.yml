@@ -4,13 +4,13 @@
   gather_facts: no
 
   vars:
-    - target_instance_name: "win2019-1"
+    - target_instance_name: "aws-win2019-iis-1"
     # Sydney is ap-southeast-2
+    # North Virginia is us-east-1
     - target_aws_region: "ap-southeast-2"
-    - target_ami_name: "windows-server-2019-vs2019-1587402410"
-    - target_owners: "483285841698"
-    - target_instance_type: "t2.micro"
-    - target_key_name: "aws-ssh-key-1"
+    - target_ami_name: "Windows_Server-2019-English-Full-Base-2020.04.15"
+    - target_owners: "801119661308"
+    - target_instance_type: "t2.medium"
     - target_vpc_subnet_id: "subnet-dc7130ab"
     - target_volume_size: "30"
     # Security Group Options: ssh-http, ssh-mysql, winrm-rdp-http
